@@ -1,5 +1,16 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <AddGroup />
   </div>
 </template>
+<script>
+// @ is an alias to /src
+import AddGroup from "@/components/AddGroup.vue";
+
+export default {
+  name: "About",
+  components: {
+    AddGroup
+  }
+};
+</script>
