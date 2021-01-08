@@ -7,11 +7,6 @@ class FirebaseService {
   getAll() {
     return db.child("/groups");
   }
-
-  getAllGroups() {
-    return db.child("/groups");
-  }
-
   create(tutorial) {
     return db.child("/teams").push(tutorial);
   }
@@ -31,12 +26,24 @@ class FirebaseService {
   uploadFile(post) {
     return db.child("/photos").push(post);
   }
+
   createNewMatch(key, match) {
     return db
       .child("/groups")
       .child(key)
       .child("/matches")
       .push(match);
+  }
+  getAllFixturesInGroup(key) {
+    return db.child("/groups").child(key);
+  }
+
+  createNewFixture(key, fixture) {
+    return db
+      .child("/groups")
+      .child(key)
+      .child("/fixtures")
+      .push(fixture);
   }
 
   updateMatch(key, matchkey, match) {
@@ -64,6 +71,34 @@ class FirebaseService {
 
   delete(key) {
     return db.child(key).remove();
+  }
+
+  deleteTeam(groupKey, teamKey) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .remove();
+  }
+
+  addTeamGeneralPoints(groupKey, teamKey, value) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .child("general")
+      .push(value);
+  }
+
+  updateTeamLogo(groupKey, teamKey) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .remove();
   }
 
   deleteAll() {

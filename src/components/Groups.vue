@@ -1,10 +1,9 @@
-/* eslint-disable vue/no-unused-components */
 <template>
-  <v-container>
+  <v-container fluid>
     <h1>Groups</h1>
 
     <v-row class="mb-6" no-gutters>
-      <v-col>
+      <v-col md="3">
         <v-card class="pa-2" outlined tile>
           <v-list>
             <v-list-item
@@ -30,17 +29,17 @@
           </v-list>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col md="9">
         <v-card class="pa-2" outlined tile>
           <div v-if="currentGroup">
             <group-teams
               :group_teams="currentGroup"
-              @refreshList="refreshList"
+              :current_index="currentIndex"
             />
           </div>
           <div v-else>
             <br />
-            <p>Please click on a Tutorial...</p>
+            <p>Please click on a group...</p>
           </div>
         </v-card>
       </v-col>
@@ -67,17 +66,16 @@ export default {
     onDataChange(items) {
       let _groups = [];
 
-      console.log("what are these", items);
       items.forEach(item => {
         let key = item.key;
         let data = item.val();
-        console.log("what are these yy", data);
 
         _groups.push({
           key: key,
           title: data.name,
           description: data.name,
-          teams: data.teams
+          teams: data.teams,
+          fixtures: data.fixtures
         });
       });
 
@@ -87,7 +85,7 @@ export default {
     refreshList() {
       let currentGroup = this.currentGroup;
       let currentIndex = this.currentIndex;
-      if (currentIndex === -1) {
+      if (currentIndex !== -1) {
         this.currentGroup = currentGroup;
         this.currentIndex = currentIndex;
       } else {

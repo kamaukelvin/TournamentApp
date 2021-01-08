@@ -1,6 +1,6 @@
 <template>
   <main>
-    <v-toolbar color="cyan" dark flat>
+    <v-toolbar dark flat>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
       <v-toolbar-title>Kothbiro Dashboard</v-toolbar-title>
@@ -39,7 +39,7 @@
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
-          <Matches />
+          <Standings />
         </v-card>
       </v-tab-item>
     </v-tabs-items>
@@ -49,28 +49,16 @@
 <script>
 import Groups from "../components/Groups";
 import Teams from "../components/Teams";
-import Matches from "../components/Matches";
+import Standings from "../components/Standings";
 
 export default {
   name: "Home",
-  components: { Groups, Teams, Matches },
+  components: { Groups, Teams, Standings },
   data() {
     return {
       tab: null,
-      items: ["Groups", "Teams", "Matches"],
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      items: ["Groups", "Teams", "Standings"]
     };
   }
-  //   data() {
-  //     return {
-  //       drawer: false,
-  //       links: [
-  //         { icon: "dashboard", text: "Dashboard", route: "/" },
-  //         { icon: "folder", text: "My Projects", route: "/projects" },
-  //         { icon: "person", text: "Team", route: "/team" }
-  //       ]
-  //     };
-  //   }
 };
 </script>

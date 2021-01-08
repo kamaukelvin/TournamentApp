@@ -15,3 +15,9 @@ export default {
   })
 };
 </script>
+
+<style scoped>
+h4 {
+  color: teal;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
-      <h2>Add team</h2>
+      <h4>Add team</h4>
     </v-card-title>
     <v-card-text>
       <v-form>
@@ -11,44 +11,57 @@
           required
           v-model="teamName"
         />
-        <v-file-input
-          v-model="caption"
-          placeholder="Upload your documents"
-          label="File input"
-          multiple
-          prepend-icon="mdi-paperclip"
-          @change="previewImage"
-        >
-          <template v-slot:selection="{ text }">
-            <v-chip small label color="primary">
-              {{ text }}
-            </v-chip>
-          </template>
-        </v-file-input>
+        <v-layout row>
+          <v-flex md6 offset-sm1>
+            <div>
+              <div>
+                <v-btn @click="click1">choose photo</v-btn>
+                <input
+                  type="file"
+                  ref="input1"
+                  style="display: none"
+                  @change="previewImage"
+                  accept="image/*"
+                />
+              </div>
+
+              <div v-if="imageData != null">
+                <img class="preview" height="268" width="356" :src="img1" />
+                <br />
+              </div>
+            </div>
+          </v-flex>
+        </v-layout>
       </v-form>
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="uploadFile" color="info">Add Team</v-btn>
+      <v-btn @click="saveTeam" color="info">Add Team</v-btn>
     </v-card-actions>
-    <p>{{ message }}</p>
+
+    <v-alert v-if="message" type="success">
+      {{ message }}
+    </v-alert>
+    <v-alert v-if="error" type="success">
+      {{ error }}
+    </v-alert>
   </v-card>
 </template>
 
 <script>
 import FirebaseService from "../services/FirebaseService";
-import firebase from 'firebase';
+import firebase from "firebase/app";
 
 export default {
   name: "addteam",
   props: ["groupInfo"],
   data() {
     return {
-      files: [],
       teamName: "",
       message: "",
       group: null,
+      error: "",
       img1: "",
       imageData: null
     };
@@ -69,9 +82,10 @@ export default {
       this.imageData = event.target.files[0];
       this.onUpload();
     },
+
     onUpload() {
       this.img1 = null;
-      const storageRef = 
+      const storageRef = firebase
         .storage()
         .ref(`${this.imageData.name}`)
         .put(this.imageData);
@@ -93,35 +107,24 @@ export default {
         }
       );
     },
-    uploadFile() {
-      const post = {
-        photo: this.img1,
-        caption: this.caption
-      };
-      FirebaseService.uploadFile
-        .push(post)
-        .then(response => {
-          this.saveTeam(response);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    click1() {
+      this.$refs.input1.click();
     },
-    saveTeam(imgUrl) {
+    saveTeam() {
       const data = {
         name: this.teamName,
-        image: imgUrl
+        icon: this.img1
       };
       var parsedobj = JSON.parse(JSON.stringify(this.group));
 
       FirebaseService.createNewTeam(parsedobj.key, data)
         .then(() => {
-          this.message = "The tutorial was updated successfully!";
+          this.message = "The Team was updated successfully!";
           this.teamName = "";
-          this.$emit("refreshList");
+          this.img1 = "";
         })
         .catch(e => {
-          console.log(e);
+          this.error = e;
         });
     }
   },
