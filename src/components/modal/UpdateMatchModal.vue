@@ -11,79 +11,39 @@
         <v-select ref="selectedItem"
           :items="items"
           label="Outlined style"
-          v-model="Action"
+          v-model="Event"
           outlined
         ></v-select>
 
           </v-col>
           <v-col cols="12" sm="6" md="4">
+         <v-select ref="selectedItem"
+          :items="teams"
+          label="Outlined style"
+          v-model="Team"
+          outlined
+        ></v-select>
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
             <v-text-field
-              label="Win*"
-              hint="Games won"
-              type="number"
-              v-model="Win"
+              label="Player*"
+              hint="Player Name"
+              type="text"
+              v-model="Player"
               persistent-hint
               required
             ></v-text-field>
           </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-text-field
-              label="Draw*"
-              hint="Games drawn"
+              label="Time in minutes"
               type="number"
-              v-model="Draw"
-              persistent-hint
-              required
+              v-model="Time"
+              hint="Time"
             ></v-text-field>
           </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              label="Loss"
-              type="number"
-              v-model="Lost"
-              hint="Games lost"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              label="Points*"
-              hint="Points"
-              type="number"
-              v-model="Points"
-              persistent-hint
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              label="Goal For*"
-              hint="Goal For"
-              type="number"
-              v-model="GoalFor"
-              persistent-hint
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              label="Goal Against"
-              hint="Goal Against"
-              type="number"
-              v-model="GoalAgainst"
-              persistent-hint
-              required
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" sm="6" md="4">
-            <v-text-field
-              label="GD*"
-              hint="GD"
-              type="number"
-              v-model="Goaldifference"
-              persistent-hint
-              required
-            ></v-text-field>
-          </v-col>
+        
+     
         </v-row>
       </v-container>
       <small>*indicates required field</small>
@@ -91,7 +51,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
 
-      <v-btn color="blue darken-1" text @click="updatePoints()">
+      <v-btn color="blue darken-1" text @click="updateMath()">
         Save
       </v-btn>
     </v-card-actions>
@@ -105,67 +65,99 @@
 </template>
 
 <script>
-// import FirebaseService from "../../services/FirebaseService";
+import FirebaseService from "../../services/FirebaseService";
  
 export default {
   name: "UpdateMatchModal",
-  props: ["matchKey", "teamGroupKey"],
+  props: ["matchKey", "teamGroupKey","fixture"],
   data() {
     return {
       dialog: false,
-      Played: 0,
-      Win: 0,
-      Action:"",
+      Event:"",
+      Team:"",
       error: "",
       message: "",
-      Draw: 0,
-      Lost: 0,
-      Points: 0,
-      GoalFor: 0,
-      GoalAgainst: 0,
-      Goaldifference: 0,
+      Player: "",
+      Time:0,
       items: ['Score', 'Yellow Card', 'Red Card', 'Sub'],
+      teams:[],
+      Teams:null,
+      fullTeam:null
+
 
     };
   },
+    mounted() {
+    this.message = "";
+    this.Teams = { ...this.fixture };
+    console.log("home",  Object.entries(this.Teams));
+    console.log("team home",  Object.entries(this.Teams)[0][1]);
+    console.log("team away how",  Object.entries(this.Teams)[2][1]);
+
+let teamsNew = [];
+var x;
+for (x of Object.entries(this.Teams)) {
+    // console.log("hi", x );
+    if (x[0]==="awayTeam") {
+      
+      teamsNew.push(x [1].name );
+      }
+    if (x[0]==="homeTeam"){ 
+      teamsNew.push(x [1].name );
+};
+
+}
+//Loop find where 
+      
+  
+
+      this.teams=teamsNew;
+    console.log("any how yo",  this.teams)
+
+   
+  },
+    watch: {
+    fixture: function(groupTeam) {
+      console.log("any how", groupTeam);
+      this.Teams = { ...groupTeam };
+      this.message = "";
+    }
+   
+  },
   methods: {
-    updatePoints() {
-      console.log("group key ", this.teamGroupKey);
-      console.log("Team key", this.matchKey);
+
+
+    updateMath() {
+
+
+if(this.team=== Object.entries(this.Teams)[0][1].name){
+  this.fullTeam=Object.entries(this.Teams)[0][1]
+}else this.fullTeam=Object.entries(this.Teams)[2][1]
       const general = {
-        Played: this.Action,
-        Win: this.Win,
-        Draw: this.Draw,
-        Lost: this.Lost,
-        Points: this.Points,
-        GoalFor: this.GoalFor,
-        GoalAgainst: this.GoalAgainst,
-        Goaldifference: this.Goaldifference
+        Event: this.Event,
+        Team: this.fullTeam,
+        Player: this.Player,  
+        Time: this.Time,
+       
       };
+      
       console.log("Team key", general);
 
-      // FirebaseService.addTeamGeneralPoints(
-      //   this.teamGroupKey,
-      //   this.matchKey,
-      //   general
-      // )
-      //   .then(() => {
-      //     this.message = "The team general points was updated successfully!";
-      //     this.dialog = false;
-      //     this.Played = 0;
-      //     this.Win = 0;
-      //     this.Draw = 0;
-      //     this.Lost = 0;
-      //     this.Points = 0;
-      //     this.GoalFor = 0;
-      //     this.GoalAgainst = 0;
-      //     this.Goaldifference = 0;
-      //     this.teamGroupKey = "";
-      //     this.matchKey = "";
-      //   })
-      //   .catch(e => {
-      //     this.error = e;
-      //   });
+      FirebaseService.updateFixture(
+        this.teamGroupKey,
+        this.matchKey,
+        general
+      )
+        .then(() => {
+          this.message = "Fixture was updated successfully!";
+          this.dialog = false;
+        
+          this.teamGroupKey = "";
+          this.matchKey = "";
+        })
+        .catch(e => {
+          this.error = e;
+        });
     }
   }
 };

@@ -24,7 +24,27 @@
             <td>{{ item.awayTeam.name }}</td>
             <td>{{ item.time }}</td>
             <td>{{ item.date }}</td>
-            <td><v-btn @click="showupdateMatchDialog(index)" color="info">Add Team</v-btn></td>
+            <td>
+            <v-btn
+      class="ma-2"
+      outlined
+      
+      
+      @click="showupdateMatchDialog(index,item)"
+    >
+      Add event
+    </v-btn>
+              <v-btn
+      class="ma-2"
+      outlined
+      
+      
+      @click="showEvents(index,item)"
+    >
+      Show events
+    </v-btn>
+            </td>
+           
           </tr>
         </tbody>
         
@@ -34,6 +54,7 @@
       <UpdateMatchModal
         :matchKey="matchKey"
         :teamGroupKey="this.currentFixtures.key"
+        :fixture="fixture"
       />
     </v-dialog>
   </v-container>
@@ -53,7 +74,9 @@ export default {
       matchKey:"",
       teamGroupKey:null,
       dialog:false,
-      componentKey:0
+      componentKey:0,
+      fixture:null,
+      dialogShowEvents:false
     };
   },
   watch: {
@@ -67,10 +90,25 @@ export default {
         forceRerender() {
       this.componentKey += 1;
     },
-      showupdateMatchDialog(key) {
-        console.log("are we here ")
-            this.forceRerender();
+    showEvents(key,item){
+      
+let events = [];
+var x;
+for (x of Object.entries(item)) {
 
+    if (x[0]==="events") {
+
+      events.push(Object.entries(x[1]));
+      }
+
+}
+        console.log("are we here ",events[0])
+
+    },
+      showupdateMatchDialog(key,item) {
+        console.log("are we here ",item)
+        this.forceRerender();
+        this.fixture=item;
       this.matchKey = key;
       this.dialog = true;
     },

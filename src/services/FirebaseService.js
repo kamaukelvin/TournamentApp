@@ -92,6 +92,18 @@ class FirebaseService {
       .push(value);
   }
 
+
+
+updateFixture(groupKey, fixtureKey, value) {
+  return db
+    .child("/groups")
+    .child(groupKey)
+    .child("/fixtures")
+    .child(fixtureKey)
+    .child("events")
+    .push(value);
+}
+
   updateTeamLogo(groupKey, teamKey) {
     return db
       .child("/groups")

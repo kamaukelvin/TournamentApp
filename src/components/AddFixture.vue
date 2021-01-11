@@ -122,7 +122,6 @@ export default {
       time: null,
       modal3: false,
       teams: null,
-      items: ["Foo", "Bar", "Fizz", "Buzz"]
     };
   },
   watch: {
