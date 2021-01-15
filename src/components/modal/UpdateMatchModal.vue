@@ -34,6 +34,16 @@
               required
             ></v-text-field>
           </v-col>
+            <v-col cols="12" sm="6" md="4">
+            <v-text-field v-if="Event=== 'Sub'"
+              label="Player*"
+              hint="Player In"
+              type="text"
+              v-model="PlayerIn"
+              persistent-hint
+              required
+            ></v-text-field>
+          </v-col>
           <v-col cols="12" sm="6" md="4">
             <v-text-field
               label="Time in minutes"
@@ -78,6 +88,7 @@ export default {
       error: "",
       message: "",
       Player: "",
+      PlayerIn:"",
       Time:0,
       items: ['Score', 'Yellow Card', 'Red Card', 'Sub'],
       teams:[],
@@ -97,7 +108,6 @@ export default {
 let teamsNew = [];
 var x;
 for (x of Object.entries(this.Teams)) {
-    // console.log("hi", x );
     if (x[0]==="awayTeam") {
       
       teamsNew.push(x [1].name );
@@ -133,16 +143,26 @@ for (x of Object.entries(this.Teams)) {
 if(this.team=== Object.entries(this.Teams)[0][1].name){
   this.fullTeam=Object.entries(this.Teams)[0][1]
 }else this.fullTeam=Object.entries(this.Teams)[2][1]
-      const general = {
+
+var general;
+if(this.Event==="Sub"){
+general = {
         Event: this.Event,
         Team: this.fullTeam,
         Player: this.Player,  
-        Time: this.Time,
-       
+        PlayerIn: this.PlayerIn,  
+        Time: this.Time,      
       };
+}else {
+   general = {
+        Event: this.Event,
+        Team: this.fullTeam,
+        Player: this.Player,  
+        Time: this.Time,      
+      };
+}
+      console.log("This team",this.fullTeam)
       
-      console.log("Team key", general);
-
       FirebaseService.updateFixture(
         this.teamGroupKey,
         this.matchKey,
