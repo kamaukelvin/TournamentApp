@@ -4,29 +4,104 @@ import firebase from "../firebase";
 const db = firebase.ref("/tournamentapp-553d2");
 
 class FirebaseService {
-  getAll() {
-    return db.child("/groups");
-  }
-  create(tutorial) {
-    return db.child("/teams").push(tutorial);
-  }
-
+  // create new group
   createGroup(group) {
     return db.child("/groups").push(group);
   }
 
-  createNewTeam(key, team) {
+  // get all groups
+  getAll() {
+    return db.child("/groups");
+  }
+
+  // create new team
+  createNewTeam(groupKey, team) {
     return db
       .child("/groups")
-      .child(key)
+      .child(groupKey)
       .child("/teams")
       .push(team);
+  }
+
+  // get all teams in groups
+  getGroupTeams(groupKey) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams");
+  }
+
+  // add Player
+
+  addPlayer(groupKey, teamKey, player) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .child("/players")
+      .push(player);
+  }
+
+  // get a Player
+
+  getPlayer(groupKey, teamKey, playerKey) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .child("/players")
+      .child(playerKey);
+  }
+
+  // Delete player
+  deletePlayer(groupKey, teamKey, playerKey) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/teams")
+      .child(teamKey)
+      .child("/players")
+      .child(playerKey)
+      .remove();
+  }
+
+  // Knockout Stage
+  // Round of 16
+  addRoundOf16(fixture) {
+    return db
+      .child("/knockout")
+      .child("/round_of_16")
+      .push(fixture);
+  }
+  // add quarters
+  addQuarters(fixture) {
+    return db
+      .child("/knockout")
+      .child("/quarters")
+      .push(fixture);
+  }
+  // add semi finals
+  addSemiFinal(fixture) {
+    return db
+      .child("/knockout")
+      .child("/semi_final")
+      .push(fixture);
+  }
+  // add finalle
+  addFinal(fixture) {
+    return db
+      .child("/knockout")
+      .child("/final")
+      .push(fixture);
   }
 
   uploadFile(post) {
     return db.child("/photos").push(post);
   }
 
+  // Create Group stage matches
   createNewMatch(key, match) {
     return db
       .child("/groups")
@@ -92,17 +167,15 @@ class FirebaseService {
       .push(value);
   }
 
-
-
-updateFixture(groupKey, fixtureKey, value) {
-  return db
-    .child("/groups")
-    .child(groupKey)
-    .child("/fixtures")
-    .child(fixtureKey)
-    .child("events")
-    .push(value);
-}
+  updateFixture(groupKey, fixtureKey, value) {
+    return db
+      .child("/groups")
+      .child(groupKey)
+      .child("/fixtures")
+      .child(fixtureKey)
+      .child("events")
+      .push(value);
+  }
 
   updateTeamLogo(groupKey, teamKey) {
     return db

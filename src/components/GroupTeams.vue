@@ -35,13 +35,15 @@
                   <h1 v-if="item.general">😢</h1>
                   <v-list-item-action v-else>
                     <v-btn icon @click.stop="showDialog(index)">
-                      <v-icon color="grey lighten-1">mdi-information</v-icon>
+                      <v-icon color="grey lighten-1"
+                        >mdi-plus-circle-outline</v-icon
+                      >
                     </v-btn>
                   </v-list-item-action>
 
                   <v-list-item-action>
                     <v-btn icon @click="deleteTeam(index)">
-                      <v-icon color="grey lighten-1">mdi-information</v-icon>
+                      <v-icon color="red lighten-1">mdi-delete</v-icon>
                     </v-btn>
                   </v-list-item-action>
                 </v-list-item>
@@ -127,8 +129,7 @@ export default {
       console.log("any", groupTeam);
       this.currentGroupTeams = { ...groupTeam };
       this.message = "";
-    }
-   
+    },
   },
   methods: {
     forceRerender() {
@@ -144,7 +145,7 @@ export default {
 
       let _groups = [];
 
-      items.forEach(item => {
+      items.forEach((item) => {
         let key = item.key;
         let data = item.val();
 
@@ -155,7 +156,7 @@ export default {
           title: data.name,
           description: data.name,
           teams: data.teams,
-          fixtures: data.fixtures
+          fixtures: data.fixtures,
         });
       });
 
@@ -164,7 +165,7 @@ export default {
 
     deleteTeam(key) {
       FirebaseService.deleteTeam(this.currentGroupTeams.key, key);
-    }
+    },
   },
   mounted() {
     this.message = "";
@@ -174,6 +175,6 @@ export default {
   },
   beforeDestroy() {
     FirebaseService.getAll().off("value", this.onDataChange);
-  }
+  },
 };
 </script>
